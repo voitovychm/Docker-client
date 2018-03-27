@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="sombrainc"
+		module="docker-client_2.11"
+		revision="1.0-SNAPSHOT"
+		conf="universal"
+		confs="universal, universal-docs, universal-src, docker, compile, runtime, test, provided, optional, windows, linux, rpm, debian, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20180327132922"/>
+	<dependencies>
+	</dependencies>
+</ivy-report>

@@ -1,0 +1,5 @@
+POST        /queryDB                   com.egnaroinc.controllers.MainController.verifyDBClient()
+POST        /encrypt                   com.egnaroinc.controllers.MainController.encryptTest()
+POST        /reloadDaemon              com.egnaroinc.controllers.MainController.reloadMongoDaemon()
+GET         /healthCheck               com.egnaroinc.controllers.MainController.healthCheck()
+

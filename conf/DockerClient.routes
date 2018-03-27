@@ -1,0 +1,2 @@
+GET   /containers/running           com.sombrainc.controllers.DockerClientController.listAllRunningContainers()
+POST  /containers                   com.sombrainc.controllers.DockerClientController.runContainer()
