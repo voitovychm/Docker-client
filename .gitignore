@@ -1,0 +1,14 @@
+logs
+log
+node_modules
+project/project
+project/target
+target
+tmp
+.history
+dist
+../.idea/
+/.idea
+/.cache
+/.target
+/*.iml

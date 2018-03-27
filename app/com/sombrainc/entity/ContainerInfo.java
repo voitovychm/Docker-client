@@ -1,8 +1,12 @@
 package com.sombrainc.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.google.common.collect.Lists;
 import com.sombrainc.common.SimpleDockerClientConstants;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ContainerInfo {
 
@@ -43,7 +47,7 @@ public class ContainerInfo {
     this.ipAddress = ipAddress;
   }
 
-  public static ContainerInfo fromContainerJson(JsonNode containerJson) {
+  public static ContainerInfo fromInspectContainerJson(JsonNode containerJson) {
     ContainerInfo containerInfo = new ContainerInfo();
     Optional.ofNullable(containerJson.get(
         SimpleDockerClientConstants.CONFIG_PARAM))
@@ -62,6 +66,27 @@ public class ContainerInfo {
         .map(JsonNode::asText).ifPresent(containerInfo::setIpAddress);
     return containerInfo;
   }
+
+  public static ContainerInfo fromContainerJson(JsonNode containerJson) {
+    ContainerInfo containerInfo = new ContainerInfo();
+    Optional.ofNullable(containerJson.get(
+        SimpleDockerClientConstants.IMAGE_PARAM)).map(JsonNode::asText)
+        .ifPresent(containerInfo::setImageName);
+    Optional.ofNullable(containerJson.get(SimpleDockerClientConstants.CONTAINER_HOST_NAME))
+        .map(JsonNode::asText).ifPresent(containerInfo::setHostname);
+    Optional.ofNullable(containerJson.get(
+        SimpleDockerClientConstants.NAMES_PARAM)).map(names -> {
+          List<String> namesList = Lists.newArrayList();
+          ((ArrayNode) names).forEach(name -> namesList.add(name.asText()));
+          return namesList.stream().collect(Collectors.joining(SimpleDockerClientConstants.COMA));
+    }).ifPresent(containerInfo::setContainerName);
+    Optional.ofNullable(containerJson.findPath(
+        SimpleDockerClientConstants.IP_ADDRESS_PARAM))
+        .map(JsonNode::asText).ifPresent(containerInfo::setIpAddress);
+    return containerInfo;
+  }
+
+
 
   @Override
   public boolean equals(Object o) {

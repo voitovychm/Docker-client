@@ -51,7 +51,7 @@ public class DockerClientService implements IDockerClientService {
                           .map(JsonNode::asText)
                   .orElseThrow(() -> new RuntimeException(createResponse.getStatusText()));
               return getStartContainerResponse(containerImage, containerId)
-                  .thenApply(WSResponse::asJson).thenApply(ContainerInfo::fromContainerJson).thenApply(
+                  .thenApply(WSResponse::asJson).thenApply(ContainerInfo::fromInspectContainerJson).thenApply(
                       ContainerInfoEntity::new).thenApply(dockerClientDAO::put);
             });
   }

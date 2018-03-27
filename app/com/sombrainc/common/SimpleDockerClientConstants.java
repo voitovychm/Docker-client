@@ -119,6 +119,7 @@ public class SimpleDockerClientConstants {
   public static final String DEFAULT_DAEMON_HOST_AND_PORT = "http://localhost:2375";
   public static final String APPLICATION_JSON = "application/json";
   public static final String NAME_PARAM = "Name";
+  public static final String NAMES_PARAM = "Names";
 
   public static final String READ_WRITE_PERMISSION = "rw";
   public static final String PROCESSES_INSIDE_CONTAINER_PROPERTY = "Processes";
