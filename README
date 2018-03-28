@@ -35,15 +35,15 @@ Then access from host via URL: http://containerip:customport/
 
 -------------------API------------------
 
-Create container API:
+1) Create container API:
 
 curl -XPOST -H "Content-Type: application/json" -d "{"Image":"imageName", ...}" http://containerip:customport/containers
 
-List all running containers:
+2) List all running containers:
 
 curl http://containerip:customport/containers/running
 
-Delete all containers by image name:
+3) Delete all containers by image name:
 
 curl -XDELETE http://containerip:customport/containers/imageName
 
