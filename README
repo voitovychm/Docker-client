@@ -29,3 +29,8 @@ After verifying the image existence, you have to run docker-compose command whic
 
 docker-compose -f docker-compose-app-mongo.yml up
 
+Check the application IP via command: docker exec -it dockerClient /bin/bash -c "cat /etc/hosts | grep dockerClient | awk {'print $1'}"
+
+Then access from host via URL: http://containerip:customport/
+
+
