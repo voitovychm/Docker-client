@@ -1,2 +1,3 @@
 GET   /containers/running           com.sombrainc.controllers.DockerClientController.listAllRunningContainers()
 POST  /containers                   com.sombrainc.controllers.DockerClientController.runContainer()
+DELETE /containers/:image           com.sombrainc.controllers.DockerClientController.killContainer(image)

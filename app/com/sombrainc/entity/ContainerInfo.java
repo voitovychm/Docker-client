@@ -12,6 +12,7 @@ public class ContainerInfo {
 
   private String imageName;
   private String containerName;
+  private String containerId;
   private String hostname;
   private String ipAddress;
 
@@ -47,6 +48,14 @@ public class ContainerInfo {
     this.ipAddress = ipAddress;
   }
 
+  public String getContainerId() {
+    return containerId;
+  }
+
+  public void setContainerId(String containerId) {
+    this.containerId = containerId;
+  }
+
   public static ContainerInfo fromInspectContainerJson(JsonNode containerJson) {
     ContainerInfo containerInfo = new ContainerInfo();
     Optional.ofNullable(containerJson.get(
@@ -64,6 +73,9 @@ public class ContainerInfo {
         SimpleDockerClientConstants.NETWORK_SETTINGS_PARAM))
         .map(networkSettings -> networkSettings.get(SimpleDockerClientConstants.IP_ADDRESS_PARAM))
         .map(JsonNode::asText).ifPresent(containerInfo::setIpAddress);
+    Optional.ofNullable(containerJson.get(
+        SimpleDockerClientConstants.ID_PARAM)).map(JsonNode::asText)
+        .ifPresent(containerInfo::setContainerId);
     return containerInfo;
   }
 
@@ -83,9 +95,11 @@ public class ContainerInfo {
     Optional.ofNullable(containerJson.findPath(
         SimpleDockerClientConstants.IP_ADDRESS_PARAM))
         .map(JsonNode::asText).ifPresent(containerInfo::setIpAddress);
+    Optional.ofNullable(containerJson.get(
+        SimpleDockerClientConstants.ID_PARAM)).map(JsonNode::asText)
+        .ifPresent(containerInfo::setContainerId);
     return containerInfo;
   }
-
 
 
   @Override
@@ -106,6 +120,9 @@ public class ContainerInfo {
         : that.containerName != null) {
       return false;
     }
+    if (containerId != null ? !containerId.equals(that.containerId) : that.containerId != null) {
+      return false;
+    }
     if (hostname != null ? !hostname.equals(that.hostname) : that.hostname != null) {
       return false;
     }
@@ -116,6 +133,7 @@ public class ContainerInfo {
   public int hashCode() {
     int result = imageName != null ? imageName.hashCode() : 0;
     result = 31 * result + (containerName != null ? containerName.hashCode() : 0);
+    result = 31 * result + (containerId != null ? containerId.hashCode() : 0);
     result = 31 * result + (hostname != null ? hostname.hashCode() : 0);
     result = 31 * result + (ipAddress != null ? ipAddress.hashCode() : 0);
     return result;
@@ -126,6 +144,7 @@ public class ContainerInfo {
     return "ContainerInfo{" +
         "imageName='" + imageName + '\'' +
         ", containerName='" + containerName + '\'' +
+        ", containerId='" + containerId + '\'' +
         ", hostname='" + hostname + '\'' +
         ", ipAddress='" + ipAddress + '\'' +
         '}';

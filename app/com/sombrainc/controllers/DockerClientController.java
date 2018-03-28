@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.common.collect.Lists;
 import com.sombrainc.common.SimpleDockerClientConstants;
 import com.sombrainc.service.DockerClientService;
+import com.sombrainc.service.IDockerClientService;
 import com.sombrainc.service.SimpleDockerClient;
 import com.google.inject.Inject;
 import java.util.List;
@@ -15,11 +16,12 @@ import play.mvc.BodyParser;
 import play.mvc.BodyParser.Of;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 
 public class DockerClientController extends Controller {
 
   @Inject
-  private DockerClientService dockerClientService;
+  private IDockerClientService dockerClientService;
 
   public CompletableFuture<Result> listAllRunningContainers(){
     return dockerClientService.listAllRunnningContainers().thenApply(containerInfos -> ok(Json.toJson(containerInfos)));
@@ -30,6 +32,11 @@ public class DockerClientController extends Controller {
     final JsonNode createParams = request().body().asJson();
     return dockerClientService.runContainer(createParams)
         .thenApply(id -> ok(String.format(SimpleDockerClientConstants.CONTAINER_INFO_SAVED, id)));
+  }
+
+  public CompletableFuture<Result> killContainer(String imageName){
+    return dockerClientService.killContainer(imageName).toCompletableFuture()
+        .thenApply(Results::ok);
   }
 
 }

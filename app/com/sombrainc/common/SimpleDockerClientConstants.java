@@ -83,6 +83,8 @@ public class SimpleDockerClientConstants {
   public static final String PORT_BINDINGS_PARAM = "PortBindings";
   public static final String HOSTNAME_PARAM = "Hostname";
   public static final String IMAGE_PARAM = "Image";
+  public static final String IMAGE_NAME_DB_PARAM = "imageName";
+  public static final String CONTAINER_ID_DB_PARAM = "containerId";
   public static final String CMD_PARAM = "Cmd";
   public static final String ENV_PARAM = "Env";
   public static final String ATTACH_STDERR_PARAM = "AttachStderr";
@@ -108,6 +110,7 @@ public class SimpleDockerClientConstants {
   public static final String EMPTY_STRING = "";
   public static final String COMA = ",";
   public static final String CONTAINER_IS_ALREADY_STOPPED = "Container %s with id %s is already stopped";
+  public static final String CONTAINERS_ARE_REMOVED = "Containers type '%s' with ids %s are successfully removed";
   public static final String CONTAINER_DELETION_CONFLICT = "Conflict while removing container %s with id %s";
 
   public static final String VOLUME_REMOVE_PARAMETER = "v";

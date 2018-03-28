@@ -12,6 +12,8 @@ import com.sombrainc.repository.IDockerClientDAO;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import play.libs.ws.WSResponse;
@@ -54,6 +56,46 @@ public class DockerClientService implements IDockerClientService {
                   .thenApply(WSResponse::asJson).thenApply(ContainerInfo::fromInspectContainerJson).thenApply(
                       ContainerInfoEntity::new).thenApply(dockerClientDAO::put);
             });
+  }
+
+  @Override
+  public CompletionStage<String> killContainer(String imageName) {
+    List<String> removedContainerIds = Lists.newArrayList();
+    final List<CompletableFuture<ContainerInfoEntity>> completableFutureList = dockerClientDAO
+        .getByImageName(imageName).stream()
+        .map(containerInfo -> simpleDockerClient.killContainer(containerInfo.getContainerId())
+            .thenApply(wsResponse -> {
+              final int statusCode = wsResponse.getStatus();
+
+              if (statusCode == 204) {
+                removedContainerIds.add(containerInfo.getContainerId());
+                return dockerClientDAO.removeByContainerId(containerInfo.getContainerId());
+              }
+              if (statusCode == 404) {
+                LOGGER.error(String
+                    .format(SimpleDockerClientConstants.CONTAINER_IS_NOT_PRESENT,
+                        containerInfo.getImageName(), containerInfo.getContainerId()));
+                throw new RuntimeException(String
+                    .format(SimpleDockerClientConstants.CONTAINER_IS_NOT_PRESENT,
+                        containerInfo.getImageName(), containerInfo.getContainerId()));
+              }
+
+              if (statusCode == 500) {
+                Optional.ofNullable(wsResponse.asJson())
+                    .map(response -> response.get(SimpleDockerClientConstants.MESSAGE))
+                    .map(JsonNode::asText).ifPresent(message -> {
+                  LOGGER.error(message);
+                  throw new RuntimeException(message);
+                });
+              }
+              throw new RuntimeException();
+            })).collect(Collectors.toList());
+    return CompletableFuture
+        .allOf(completableFutureList.toArray(new CompletableFuture[completableFutureList.size()]))
+        .thenApply(v ->
+            String.format(SimpleDockerClientConstants.CONTAINERS_ARE_REMOVED, imageName,
+                removedContainerIds.stream()
+                    .collect(Collectors.joining(SimpleDockerClientConstants.COMA))));
   }
 
   private CompletableFuture<WSResponse> getStartContainerResponse(String containerLabel,

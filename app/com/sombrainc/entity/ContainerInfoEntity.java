@@ -16,8 +16,10 @@ public class ContainerInfoEntity extends ContainerInfo {
     this.id = id;
   }
 
-  public ContainerInfoEntity(String id) {
-    this.id = id;
+
+
+  public ContainerInfoEntity() {
+
   }
 
   public ContainerInfoEntity(ContainerInfo containerInfo) {
@@ -25,6 +27,7 @@ public class ContainerInfoEntity extends ContainerInfo {
     this.setContainerName(containerInfo.getContainerName());
     this.setHostname(containerInfo.getHostname());
     this.setIpAddress(containerInfo.getIpAddress());
+    this.setContainerId(containerInfo.getContainerId());
   }
 
   @Override

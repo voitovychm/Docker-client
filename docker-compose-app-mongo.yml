@@ -17,7 +17,7 @@ services:
     ports:
       - "9000:9000"
       - "9999:9999"
-    command: ["bin/docker-client", "-Dconfig.file=conf/application.conf", "-Dhttp.port=9000","-DDB_HOST=mongo", "-DDB_PORT=27019", "-jvm-debug", "9999"]
+    command: ["bin/docker-client", "-Dconfig.file=conf/application.conf", "-Dhttp.port=9000","-DDB_HOST=mongo", "-DDB_PORT=27017", "-jvm-debug", "9999"]
     links:
       - "mongo:mongo"
     depends_on:
