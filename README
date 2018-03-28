@@ -33,4 +33,17 @@ Check the application IP via command: docker exec -it dockerClient /bin/bash -c 
 
 Then access from host via URL: http://containerip:customport/
 
+-------------------API------------------
+
+Create container API:
+
+curl -XPOST -H "Content-Type: application/json" -d "{"Image":"imageName", ...}" http://containerip:customport/containers
+
+List all running containers:
+
+curl http://containerip:customport/containers/running
+
+Delete all containers by image name:
+
+curl -XDELETE http://containerip:customport/containers/imageName
 
