@@ -9,6 +9,7 @@ import com.sombrainc.common.SimpleDockerClientConstants;
 import com.sombrainc.entity.ContainerInfo;
 import com.sombrainc.entity.ContainerInfoEntity;
 import com.sombrainc.repository.IDockerClientDAO;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -61,7 +62,7 @@ public class DockerClientService implements IDockerClientService {
   @Override
   public CompletionStage<String> killContainer(String imageName) {
     List<String> removedContainerIds = Lists.newArrayList();
-    final List<CompletableFuture<ContainerInfoEntity>> completableFutureList = dockerClientDAO
+    final List<CompletableFuture<WSResponse>> completableFutureList = dockerClientDAO
         .getByImageName(imageName).stream()
         .map(containerInfo -> simpleDockerClient.killContainer(containerInfo.getContainerId())
             .thenApply(wsResponse -> {
@@ -89,7 +90,11 @@ public class DockerClientService implements IDockerClientService {
                 });
               }
               throw new RuntimeException();
-            })).collect(Collectors.toList());
+            }).thenCompose(entity -> simpleDockerClient.removeContainer(entity.getContainerId(),
+                new HashMap<String, String>() {{
+                  put(SimpleDockerClientConstants.FORCE_REMOVE_PARAMETER, String.valueOf(true));
+                }})))
+        .collect(Collectors.toList());
     return CompletableFuture
         .allOf(completableFutureList.toArray(new CompletableFuture[completableFutureList.size()]))
         .thenApply(v ->
