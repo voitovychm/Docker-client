@@ -1,49 +1,31 @@
-This is your new Play application
-=================================
+In order to run the project locally you have to run activator command:
 
-This file will be packaged with your application when using `activator dist`.
+./activator run
 
-There are several demonstration files available in this template.
+Note, that project requires MongoDB datastore provided by default on 127.0.0.1 host and 27017 port. However, you can customize it by adding parameters to run command:
 
-Controllers
-===========
+./activator -DDB_HOST=custom_host -DDB_PORT=custom_port run
 
-- HomeController.java:
+In order to enable debug along with run:
 
-  Shows how to handle simple HTTP requests.
+./activator -jvm-debug debugport run
 
-- AsyncController.java:
 
-  Shows how to do asynchronous programming when handling a request.
+In order to run on custom port:
 
-- CountController.java:
+./activator "run customport"
 
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
+access project on http://localhost:9000 or http://localhost:customport
 
-Components
-==========
+-------------DOCKER--------------------
 
-- Module.java:
+In order to run project in docker, you have to have docker (preferable latest versions) and docker-compose (that supports version 3) to be installed on your local machine. 
+In order to build image first via activator command:
 
-  Shows how to use Guice to bind all the components needed by your application.
+./activator docker
 
-- Counter.java:
+Once, its done, you can check that the image with name 'sombrainc/docker-client:1.0-SNAPSHOT' appears in your local docker registry (run command 'docker images | grep docker-client').
+After verifying the image existence, you have to run docker-compose command which will launch application and datasource containers:
 
-  An example of a component that contains state, in this case a simple counter.
+docker-compose -f docker-compose-app-mongo.yml up
 
-- ApplicationTimer.java:
-
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-Filters
-=======
-
-- Filters.java:
-
-  Creates the list of HTTP filters used by your application.
-
-- ExampleFilter.java
-
-  A simple filter that adds a header to every response.
